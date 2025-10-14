@@ -1,0 +1,439 @@
+{
+    "Hotspotini Burrito": {
+        "DontSpawn": true,
+        "Health": 15000,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://139932041817450"
+    },
+    "Rhino Toasterino": {
+        "DontSpawn": true,
+        "Health": 21600,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://133755462305160"
+    },
+    "Ospedale": {
+        "DontSpawn": true,
+        "Health": 32400,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://109595544914914"
+    },
+    "Chef Crabacadabra": {
+        "DontSpawn": true,
+        "Health": 48600,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://86102989100844"
+    },
+    "Dragon Cannelloni": {
+        "DontSpawn": true,
+        "Health": 145800,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://134792006467670"
+    },
+    "Wardenelli Brickatoni": {
+        "DontSpawn": true,
+        "Health": 180000,
+        "NoIndex": true,
+        "Offset": 0,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://73883861054354"
+    },
+    "Cerberinno Hotdoggino": {
+        "DontSpawn": true,
+        "Health": 200000,
+        "NoIndex": true,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://132501571641675",
+        "CustomSpawner": "Volcano"
+    },
+    "67": {
+        "DontSpawn": true,
+        "Health": 676767,
+        "NoIndex": true,
+        "Rarity": "Limited",
+        "Icon": "rbxassetid://132740104562098"
+    },
+    "Agarrini La Palini": {
+        "Health": 250,
+        "Icon": "rbxassetid://77403481995061",
+        "Rarity": "Rare"
+    },
+    "Alessio": {
+        "Health": 1000,
+        "Icon": "rbxassetid://70558448156053",
+        "Rarity": "Epic"
+    },
+    "Arminini Bodybuilderini": {
+        "DontSpawn": true,
+        "Health": 50000,
+        "Icon": "rbxassetid://101964464793667",
+        "NoIndex": true,
+        "Rarity": "Limited"
+    },
+    "Ballerina Cappuccina": {
+        "Health": 1000,
+        "Icon": "rbxassetid://125810840099657",
+        "Rarity": "Legendary"
+    },
+    "Baby Peperoncini And Marmellata": {
+        "Health": 50000,
+        "Icon": "rbxassetid://79030344952598",
+        "Rarity": "Mythic"
+    },
+    "Bambini Crostini": {
+        "Health": 650,
+        "Icon": "rbxassetid://105929351832512",
+        "Rarity": "Epic"
+    },
+    "Bananita Dolphinita": {
+        "Health": 1250,
+        "Icon": "rbxassetid://77628225072350",
+        "Rarity": "Legendary"
+    },
+    "Bandito Bobrito": {
+        "Health": 5000,
+        "Icon": "rbxassetid://109529983450109",
+        "Rarity": "Epic",
+        "Offset": -0.1
+    },
+    "Blueberrinni Octopussini": {
+        "Event": "GalacticEvent",
+        "EventMutation": "Galactic",
+        "Health": 100000,
+        "Icon": "rbxassetid://88552624522349",
+        "Rarity": "Secret"
+    },
+    "Bombardilo Watermelondrilo": {
+        "DontSpawn": true,
+        "Health": 100000,
+        "Icon": "rbxassetid://109806453441188",
+        "Offset": 0,
+        "Rarity": "Mythic"
+    },
+    "Bombardiro Crocodilo": {
+        "Health": 7250,
+        "Icon": "rbxassetid://85610921681245",
+        "Offset": 0,
+        "Rarity": "Mythic"
+    },
+    "Bombini Gussini": {
+        "Health": 6500,
+        "Icon": "rbxassetid://95535235457274",
+        "Offset": 0,
+        "Rarity": "Mythic"
+    },
+    "Boneca Ambalabu": {
+        "Health": 200,
+        "Icon": "rbxassetid://131868697457333",
+        "Offset": 0.2,
+        "Rarity": "Rare"
+    },
+    "Bottellini": {
+        "Health": 12500,
+        "Icon": "rbxassetid://121123819650176",
+        "Rarity": "Legendary"
+    },
+    "Bredda Ratto": {
+        "DontSpawn": true,
+        "Health": 300000,
+        "Icon": "rbxassetid://125027498735172",
+        "NoIndex": true,
+        "Rarity": "Limited"
+    },
+    "Brr Brr Patapim": {
+        "Health": 500,
+        "Icon": "rbxassetid://101485378630079",
+        "Rarity": "Epic"
+    },
+    "Brr Brr Sunflowerim": {
+        "DontSpawn": true,
+        "Health": 10000,
+        "Icon": "rbxassetid://134602046926021",
+        "Rarity": "Epic"
+    },
+    "Brri Brri Bicus Dicus Bombicus": {
+        "Event": "GoldenEvent",
+        "EventMutation": "Gold",
+        "Health": 125000,
+        "Icon": "rbxassetid://110032622261928",
+        "Rarity": "Secret"
+    },
+    "Burbaloni Lulliloli": {
+        "Health": 1500,
+        "Icon": "rbxassetid://106660708838399",
+        "Rarity": "Legendary",
+        "Offset": -0.1
+    },
+    "Cappuccino Assasino": {
+        "Health": 500,
+        "Icon": "rbxassetid://112706482782721",
+        "Rarity": "Epic"
+    },
+    "Carnivourita Tralalerita": {
+        "DontSpawn": true,
+        "Health": 750000,
+        "Icon": "rbxassetid://131772761891555",
+        "Rarity": "Godly",
+        "Zoom": 9.35
+    },
+    "Cocotanko Giraffanto": {
+        "DontSpawn": true,
+        "Health": 250000,
+        "Icon": "rbxassetid://117584837805137",
+        "Rarity": "Godly"
+    },
+    "Crazylone Pizaione": {
+        "Health": 75000,
+        "Icon": "rbxassetid://82049595942670",
+        "Rarity": "Secret"
+    },
+    "Dragonfrutina Dolphinita": {
+        "DontSpawn": true,
+        "Health": 25000,
+        "Icon": "rbxassetid://136997970843443",
+        "Rarity": "Legendary"
+    },
+    "Eggplantini Burbalonini": {
+        "DontSpawn": true,
+        "Health": 25000,
+        "Icon": "rbxassetid://127751654506831",
+        "Rarity": "Legendary"
+    },
+    "Elefanto Cocofanto": {
+        "Health": 1550,
+        "Icon": "rbxassetid://89177298430730",
+        "Rarity": "Legendary"
+    },
+    "Espresso Signora": {
+        "Health": 1250,
+        "Icon": "rbxassetid://84236964905075",
+        "Rarity": "Rare"
+    },
+    "Fluri Flura": {
+        "Health": 250,
+        "Icon": "rbxassetid://98970183083387",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "Frigo Camelo": {
+        "Health": 5000,
+        "Icon": "rbxassetid://130125807180159",
+        "Rarity": "Mythic"
+    },
+    "Gangster Footera": {
+        "Health": 1400,
+        "Icon": "rbxassetid://132108078868987",
+        "Rarity": "Legendary"
+    },
+    "Garamararam": {
+        "Health": 76500,
+        "Icon": "rbxassetid://82635037229976",
+        "Rarity": "Secret"
+    },
+    "Gattolini Owlini": {
+        "DontSpawn": true,
+        "Health": 1000000,
+        "Icon": "rbxassetid://101142953638431",
+        "NoIndex": true,
+        "Rarity": "Limited"
+    },
+    "Giraffa Celeste": {
+        "Health": 17500,
+        "Icon": "rbxassetid://90370216649810",
+        "Rarity": "Godly"
+    },
+    "Godly Lucky Egg": {
+        "Egg": true,
+        "Health": 25000,
+        "Icon": "rbxassetid://77363207935106",
+        "Offset": 0,
+        "Rarity": "Godly"
+    },
+    "Las Tralaleritas": {
+        "Health": 1650,
+        "Icon": "rbxassetid://130611742778223",
+        "Rarity": "Legendary"
+    },
+    "Lemowzio": {
+        "DontSpawn": true,
+        "Health": 1500000,
+        "Rarity": "Secret",
+        "Icon": "rbxassetid://87853605879486"
+    },
+    "Lirili Larila": {
+        "Health": 180,
+        "Icon": "rbxassetid://96875923886569",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "Los Mr Carrotitos": {
+        "DontSpawn": true,
+        "Health": 1250000,
+        "Icon": "rbxassetid://131281003341622",
+        "Rarity": "Secret"
+    },
+    "Los Sekolitos": {
+        "Health": 125000,
+        "Rarity": "Secret",
+        "Icon": "rbxassetid://76226205837784"
+    },
+    "Los Tralaleritos": {
+        "Health": 50000,
+        "Icon": "rbxassetid://136442175953220",
+        "Rarity": "Secret"
+    },
+    "Luis Traffico": {
+        "Health": 85000,
+        "Icon": "rbxassetid://111105136142928",
+        "Rarity": "Godly"
+    },
+    "Madung": {
+        "Health": 1800,
+        "Icon": "rbxassetid://131669357149038",
+        "Rarity": "Legendary"
+    },
+    "Matteo": {
+        "Health": 25000,
+        "Icon": "rbxassetid://113041763418053",
+        "Rarity": "Godly"
+    },
+    "Mattone Rotto": {
+        "Health": 12500,
+        "Icon": "rbxassetid://112888010409111",
+        "Rarity": "Epic",
+        "DontSpawn": true
+    },
+    "Meme Lucky Egg": {
+        "Egg": true,
+        "Health": 150000,
+        "Icon": "rbxassetid://91172466134684",
+        "Offset": 0,
+        "Rarity": "Limited"
+    },
+    "Meowzio Sushini": {
+        "Health": 100000,
+        "Rarity": "Secret",
+        "Icon": "rbxassetid://74199636813840"
+    },
+    "Noobini Bananini": {
+        "Health": 100,
+        "Icon": "rbxassetid://114426483964284",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "Noobini Cactusini": {
+        "DontSpawn": true,
+        "Health": 1000,
+        "Icon": "rbxassetid://92523333402700",
+        "Rarity": "Rare"
+    },
+    "Kiwissimo": {
+        "Health": 15000,
+        "Icon": "rbxassetid://80667434735279",
+        "Rarity": "Godly"
+    },
+    "Orangutini Ananassini": {
+        "Health": 150,
+        "Icon": "rbxassetid://96011174639503",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "Orangutini Strawberrini": {
+        "DontSpawn": true,
+        "Health": 2500,
+        "Icon": "rbxassetid://97274299105365",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "Orcalero Orcala": {
+        "Health": 2500,
+        "Icon": "rbxassetid://136382269872845",
+        "Rarity": "Epic"
+    },
+    "Pesto Mortioni": {
+        "Health": 65000,
+        "Icon": "rbxassetid://118258045453001",
+        "NoIndex": true,
+        "Rarity": "Mythic"
+    },
+    "Pipi Kiwi": {
+        "Health": 150,
+        "Icon": "rbxassetid://139279631078527",
+        "Rarity": "Rare"
+    },
+    "Pot Hotspot": {
+        "Event": "RainbowEvent",
+        "EventMutation": "Rainbow",
+        "Health": 185000,
+        "Icon": "rbxassetid://113543381810701",
+        "Rarity": "Secret"
+    },
+    "Rinoccio Verdini": {
+        "Health": 10000,
+        "Rarity": "Epic",
+        "Icon": "rbxassetid://111303576803275"
+    },
+    "Secret Lucky Egg": {
+        "Egg": true,
+        "Health": 50000,
+        "Icon": "rbxassetid://109273267616977",
+        "Offset": 0,
+        "Rarity": "Secret"
+    },
+    "Squalo Cavallo": {
+        "DontSpawn": true,
+        "Health": 100000,
+        "Icon": "rbxassetid://79877993188198",
+        "NoIndex": true,
+        "Rarity": "Limited"
+    },
+    "Svinino Bombondino": {
+        "Health": 500,
+        "Icon": "rbxassetid://104177446143028",
+        "Rarity": "Epic"
+    },
+    "Svinino Pumpkinino": {
+        "DontSpawn": true,
+        "Health": 15000,
+        "Icon": "rbxassetid://111676172513464",
+        "Rarity": "Epic"
+    },
+    "Tim Cheese": {
+        "Health": 225,
+        "Icon": "rbxassetid://108854026190655",
+        "Rarity": "Rare",
+        "Offset": -1
+    },
+    "Tralalero Tralala": {
+        "Health": 23500,
+        "Icon": "rbxassetid://130855278739078",
+        "Rarity": "Godly"
+    },
+    "Trippi Troppi": {
+        "Health": 550,
+        "Icon": "rbxassetid://88683026393736",
+        "Offset": 0,
+        "Rarity": "Epic"
+    },
+    "Trulimero Trulicina": {
+        "Health": 125,
+        "Icon": "rbxassetid://124814241301525",
+        "Offset": 0,
+        "Rarity": "Rare"
+    },
+    "La Tomatoro": {
+        "Health": 55000,
+        "Icon": "rbxassetid://86384977768744",
+        "Rarity": "Secret",
+        "Zoom": 8.5
+    }
+}
