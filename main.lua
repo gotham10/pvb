@@ -1,4 +1,7 @@
 local urls = {
+    "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/plantsautobuy2.0.lua",
+    "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/gearautobuy3.0.lua",
+    "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/claimcash.lua"
 }
 
 for _, url in ipairs(urls) do
