@@ -9,7 +9,7 @@ local modules = ReplicatedStorage:WaitForChild("Modules")
 local registries = modules:WaitForChild("Registries")
 
 local function runSeedBuyer()
-	local MIN_PRICE = 100000
+	local MIN_PRICE = 25000000
 	print("DEBUG: Initializing Seed Buyer. Minimum Price: " .. MIN_PRICE)
 
 	local buyRemote = remotes:WaitForChild("BuyItem", 5)
@@ -95,6 +95,12 @@ local function runSeedBuyer()
 		end
 		return nil
 	end
+	
+	local function parseStock(text)
+		if not text then return 0 end
+		local n = text:match("x%s*(%d+)") or text:match("(%d+)")
+		return tonumber(n) or 0
+	end
 
 	local function logStockData()
 		print("DEBUG: Logging current shop stock...")
@@ -103,11 +109,18 @@ local function runSeedBuyer()
 			if not isIgnored(itemFrame) then
 				local stockLabel = findStockLabel(itemFrame)
 				if stockLabel and stockLabel.Text then
-					local stockText = stockLabel.Text:match("x%s*%d+") or stockLabel.Text:match("%d+") or "x0"
-					if not stockText:find("x") then stockText = "x" .. stockText end
-					stockItems[itemFrame.Name] = stockText
+					local stockCount = parseStock(stockLabel.Text)
+					if stockCount > 0 then
+						local cleanName = itemFrame.Name:gsub("%s*Seed$", "")
+						stockItems[cleanName] = "x" .. tostring(stockCount)
+					end
 				end
 			end
+		end
+
+		if next(stockItems) == nil then
+			print("DEBUG: No items in stock to log.")
+			return
 		end
 
 		local newLogEntry = {
@@ -172,11 +185,6 @@ local function runSeedBuyer()
 	end
 
 	local seedPrices = parseSeedPrices(seedsRegistryScript)
-
-	local function parseStock(text)
-		local n = text:match("x%s*(%d+)") or text:match("(%d+)")
-		return tonumber(n) or 0
-	end
 
 	local function canBuy(seedName)
 		local price = seedPrices[seedName]
