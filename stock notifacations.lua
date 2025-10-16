@@ -2,7 +2,7 @@ local HttpService = game:GetService("HttpService")
 local StarterGui = game:GetService("StarterGui")
 
 local ItemsData = {}
-local itemsDataUrl = "https://raw.githubusercontent.com/gotham10/pvb/main/data"
+local itemsDataUrl = "https://raw.githubusercontent.com/gotham10/pvb/main/plantstockdata.json"
 local apiUrl = "https://plantsvsbrainrot.com/api/seed-shop.php"
 
 local function updateItemsData()
@@ -11,14 +11,12 @@ local function updateItemsData()
     end)
 
     if success and response and response.StatusCode == 200 then
-        local code = response.Body
-        local returnableCode = code:gsub("local ItemsData = ", "return ", 1)
-        local loadSuccess, loadedFunc = pcall(loadstring, returnableCode)
-        if loadSuccess and type(loadedFunc) == "function" then
-            local funcSuccess, data = pcall(loadedFunc)
-            if funcSuccess and type(data) == "table" then
-                ItemsData = data
-            end
+        local decodeSuccess, data = pcall(function()
+            return HttpService:JSONDecode(response.Body)
+        end)
+
+        if decodeSuccess and type(data) == "table" then
+            ItemsData = data
         end
     end
 end
