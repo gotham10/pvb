@@ -1,0 +1,97 @@
+{
+  "Mango": {
+    "Icon": "rbxassetid://73209082626481",
+    "Rarity": "Secret",
+    "IsTarget": true
+  },
+  "Mr Carrot": {
+    "Icon": "rbxassetid://70369254160854",
+    "Rarity": "Secret",
+    "IsTarget": true
+  },
+  "Pine-a-Punch": {
+    "Icon": "",
+    "Rarity": "Legendary",
+    "IsTarget": true
+  },
+  "Tomatrio": {
+    "Icon": "rbxassetid://100405469195650",
+    "Rarity": "Secret",
+    "IsTarget": true
+  },
+  "Shroombino": {
+    "Icon": "rbxassetid://113109699789835",
+    "Rarity": "Secret",
+    "IsTarget": true
+  },
+  "Cactus": {
+    "Icon": "rbxassetid://71935777513338",
+    "Rarity": "Rare",
+    "IsTarget": false
+  },
+  "Carnivorous Plant": {
+    "Icon": "rbxassetid://108581369220468",
+    "Rarity": "Godly",
+    "IsTarget": false
+  },
+  "Cocotank": {
+    "Icon": "rbxassetid://128811971850827",
+    "Rarity": "Godly",
+    "IsTarget": false
+  },
+  "Copuccino": {
+    "Icon": "rbxassetid://115234505485429",
+    "Rarity": "Godly",
+    "IsTarget": false
+  },
+  "Dragon Fruit": {
+    "Icon": "rbxassetid://70414275604342",
+    "Rarity": "Legendary",
+    "IsTarget": false
+  },
+  "Eggplant": {
+    "Icon": "rbxassetid://92253754928192",
+    "Rarity": "Legendary",
+    "IsTarget": false
+  },
+  "Grape": {
+    "Icon": "rbxassetid://102559343308983",
+    "Rarity": "Mythic",
+    "IsTarget": false
+  },
+  "Pumpkin": {
+    "Icon": "rbxassetid://107477331514190",
+    "Rarity": "Epic",
+    "IsTarget": false
+  },
+  "Strawberry": {
+    "Icon": "rbxassetid://83081798643161",
+    "Rarity": "Rare",
+    "IsTarget": false
+  },
+  "Sunflower": {
+    "Icon": "rbxassetid://135304039148069",
+    "Rarity": "Epic",
+    "IsTarget": false
+  },
+  "Watermelon": {
+    "Icon": "rbxassetid://137524376678423",
+    "Rarity": "Mythic",
+    "IsTarget": false
+  },
+  "Don Fragola": {
+    "Icon": "rbxassetid://78889356496961",
+    "Rarity": "Rare",
+    "IsTarget": false
+  },
+  "Sunzio": {
+    "Icon": "rbxassetid://118256475076943",
+    "Rarity": "Epic",
+    "IsTarget": false
+  },
+  "Aubie": {
+    "Icon": "rbxassetid://122116660967969",
+    "Rarity": "Legendary",
+    "IsTarget": false
+  }
+}
