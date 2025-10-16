@@ -1,4 +1,29 @@
 local ItemsData = {
+    Mango = {
+        Icon = "rbxassetid://73209082626481",
+        Rarity = "Secret",
+        IsTarget = true,
+    },
+    ["Mr Carrot"] = {
+        Icon = "rbxassetid://70369254160854",
+        Rarity = "Secret",
+        IsTarget = true,
+    },
+    ["Pine-a-Punch"] = {
+        Icon = "",
+        Rarity = "Legendary",
+        IsTarget = true,
+    },
+    Tomatrio = {
+        Icon = "rbxassetid://100405469195650",
+        Rarity = "Secret",
+        IsTarget = true,
+    },
+    Shroombino = {
+        Icon = "rbxassetid://113109699789835",
+        Rarity = "Secret",
+        IsTarget = true,
+    },
     Cactus = {
         Icon = "rbxassetid://71935777513338",
         Rarity = "Rare",
@@ -34,30 +59,10 @@ local ItemsData = {
         Rarity = "Mythic",
         IsTarget = false,
     },
-    Mango = {
-        Icon = "rbxassetid://73209082626481",
-        Rarity = "Secret",
-        IsTarget = true,
-    },
-    ["Mr Carrot"] = {
-        Icon = "rbxassetid://70369254160854",
-        Rarity = "Secret",
-        IsTarget = true,
-    },
-    ["Pine-a-Punch"] = {
-        Icon = "",
-        Rarity = "Legendary",
-        IsTarget = true,
-    },
     Pumpkin = {
         Icon = "rbxassetid://107477331514190",
         Rarity = "Epic",
         IsTarget = false,
-    },
-    Shroombino = {
-        Icon = "rbxassetid://113109699789835",
-        Rarity = "Secret",
-        IsTarget = true,
     },
     Strawberry = {
         Icon = "rbxassetid://83081798643161",
@@ -68,11 +73,6 @@ local ItemsData = {
         Icon = "rbxassetid://135304039148069",
         Rarity = "Epic",
         IsTarget = false,
-    },
-    Tomatrio = {
-        Icon = "rbxassetid://100405469195650",
-        Rarity = "Secret",
-        IsTarget = true,
     },
     Watermelon = {
         Icon = "rbxassetid://137524376678423",
