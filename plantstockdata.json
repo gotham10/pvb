@@ -1,7 +1,7 @@
 {
   "Mango": {"Icon": "rbxassetid://73209082626481", "IsTarget": true},
-  "Mr Carrot": {"Icon": "rbxassetid://70369254160854", "IsTarget": true},
-  "Tomatrio": {"Icon": "rbxassetid://100405469195650", "IsTarget": true},
-  "Shroombino": {"Icon": "rbxassetid://113109699789835", "IsTarget": true},
+  "Mr Carrot": {"Icon": "rbxassetid://70369254160854", "IsTarget": false},
+  "Tomatrio": {"Icon": "rbxassetid://100405469195650", "IsTarget": false},
+  "Shroombino": {"Icon": "rbxassetid://113109699789835", "IsTarget": false},
   "King Limone": {"Icon": "rbxassetid://78047490865781", "IsTarget": true}
 }
