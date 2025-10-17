@@ -39,7 +39,7 @@ giftItemRemote.OnClientEvent:Connect(function(giftPayload)
     end
 end)
 
-if LocalPlayer.Name == "DARK_ENCHANTEDD" then
+if LocalPlayer.Name == "" then
     Character.ChildAdded:Connect(function(child)
         if child:IsA("Tool") then
             task.spawn(function()
