@@ -39,6 +39,7 @@ giftItemRemote.OnClientEvent:Connect(function(giftPayload)
     end
 end)
 
+-- add local name here for the player sending the items
 if LocalPlayer.Name == "" then
     Character.ChildAdded:Connect(function(child)
         if child:IsA("Tool") then
