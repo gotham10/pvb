@@ -8,11 +8,28 @@ local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 local giftItemRemote = Remotes:WaitForChild("GiftItem")
 local acceptGiftRemote = Remotes:WaitForChild("AcceptGift")
 
+local function isValidRecipient(username)
+    local function checkPrefix(prefix)
+        local numStr = username:match("^" .. prefix .. "(%d+)$")
+        if numStr then
+            local num = tonumber(numStr)
+            if num and num >= 1 and num <= 30 then
+                return true
+            end
+        end
+        return false
+    end
+    if checkPrefix("pvbfarmeracc") then return true end
+    if checkPrefix("pvbplantsholderacc") then return true end
+    if checkPrefix("pvbbrainrotholderacc") then return true end
+    return false
+end
+
 local function findClosestPlayer()
     local closestPlayer = nil
     local minDistance = math.huge
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
+        if player ~= LocalPlayer and isValidRecipient(player.Name) then
             local playerCharacter = player.Character
             if playerCharacter then
                 local playerRootPart = playerCharacter:FindFirstChild("HumanoidRootPart")
