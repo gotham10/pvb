@@ -1,0 +1,148 @@
+{
+  "rarity_colors": {
+    "Rare": "#55CDFC",
+    "Epic": "#A569BD",
+    "Legendary": "#F5B041",
+    "Mythic": "#EC7063",
+    "Godly": "#E74C3C",
+    "Secret": "#BE25B7",
+    "Default": "#B5BAC1"
+  },
+  "alarm_settings": {
+    "sound_file": "alarm.mp3"
+  },
+  "items": {
+    "Aubie": {
+      "IsTarget": false,
+      "Rarity": "Legendary",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Aubie%20Seed.png"
+    },
+    "Cactus": {
+      "IsTarget": false,
+      "Rarity": "Rare",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Cactus%20Seed.png"
+    },
+    "Carnivorous Plant": {
+      "IsTarget": true,
+      "Rarity": "Godly",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Carnivorous%20Plant%20Seed.png"
+    },
+    "Cocotank": {
+      "IsTarget": false,
+      "Rarity": "Godly",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Cocotank%20Seed.png"
+    },
+    "Copuccino": {
+      "IsTarget": false,
+      "Rarity": "Godly",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Copuccino%20Seed.png"
+    },
+    "Don Fragola": {
+      "IsTarget": false,
+      "Rarity": "Rare",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Don%20Fragola%20Seed.png"
+    },
+    "Dragon Fruit": {
+      "IsTarget": false,
+      "Rarity": "Legendary",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Dragon%20Fruit%20Seed.png"
+    },
+    "Eggplant": {
+      "IsTarget": false,
+      "Rarity": "Legendary",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Eggplant%20Seed.png"
+    },
+    "Grape": {
+      "IsTarget": false,
+      "Rarity": "Mythic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Grape%20Seed.png"
+    },
+    "King Limone": {
+      "IsTarget": true,
+      "TriggerAlarm": true,
+      "Rarity": "Secret",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/King%20Limone%20Seed.png"
+    },
+    "Mango": {
+      "IsTarget": true,
+      "TriggerAlarm": true,
+      "Rarity": "Secret",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Mango%20Seed.png"
+    },
+    "Mr Carrot": {
+      "IsTarget": true,
+      "Rarity": "Secret",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Mr%20Carrot%20Seed.png"
+    },
+    "Pine-a-Punch": {
+      "IsTarget": true,
+      "Rarity": "Legendary",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Pine-a-Punch%20Seed.png"
+    },
+    "Pumpkin": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Pumpkin%20Seed.png"
+    },
+    "Shroombino": {
+      "IsTarget": true,
+      "Rarity": "Secret",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Shroombino%20Seed.png"
+    },
+    "Strawberry": {
+      "IsTarget": false,
+      "Rarity": "Rare",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Strawberry%20Seed.png"
+    },
+    "Sunflower": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Sunflower%20Seed.png"
+    },
+    "Sunzio": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Sunzio%20Seed.png"
+    },
+    "Tomade Torelli": {
+      "IsTarget": false,
+      "Rarity": "Godly",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Tomade%20Torelli%20Seed.png"
+    },
+    "Tomatrio": {
+      "IsTarget": true,
+      "Rarity": "Secret",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Tomatrio%20Seed.png"
+    },
+    "Watermelon": {
+      "IsTarget": false,
+      "Rarity": "Mythic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/refs/heads/main/plants/Watermelon%20Seed.png"
+    },
+    "Water Bucket": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/main/gears/Water%20Bucket.png"
+    },
+    "Frost Grenade": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/main/gears/Frost%20Grenade.png"
+    },
+    "Banana Gun": {
+      "IsTarget": false,
+      "Rarity": "Epic",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/main/gears/Banana%20Gun.png"
+    },
+    "Frost Blower": {
+      "IsTarget": false,
+      "Rarity": "Legendary",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/main/gears/Frost%20Blower.png"
+    },
+    "Carrot Launcher": {
+      "IsTarget": false,
+      "Rarity": "Godly",
+      "ImageUrl": "https://raw.githubusercontent.com/gotham10/stock/main/gears/Carrot%20Launcher.png"
+    }
+  }
+}
