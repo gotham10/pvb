@@ -13,7 +13,7 @@ function missing(t, f, fallback)
 end
 
 local queueteleport = missing("function", queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport))
-local SCRIPT_URL = "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/alldata/test.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/alldata/test2.lua"
 local KeepScriptRunning = true
 local TeleportCheck = false
 
