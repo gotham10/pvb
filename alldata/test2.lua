@@ -162,7 +162,7 @@ local MAX_KG_THRESHOLD_PLANT = 10
 local MAX_KG_THRESHOLD_BRAINROT = 100
 
 local ScanPlants = {
-    ["Troll Mango"] = { kg = 100, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Troll Mango"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Commando Apple"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["King Limone"] = { kg = 3, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Aubie"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
@@ -174,8 +174,8 @@ local ScanPlants = {
     ["Dragon Fruit"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Eggplant"] = { kg = 75, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Grape"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Mango"] = { kg = 5, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Mr Carrot"] = { kg = 10, mutations = {Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Mango"] = { kg = 6, mutations = {Diamond = 2, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Mr Carrot"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 3}, mutationsBypassKg = true, ignore = false },
     ["Pine-a-Painter"] = { kg = 10, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Pumpkin"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Shroombino"] = { kg = 10, mutations = {Diamond = 3, Ruby = 3, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
@@ -183,7 +183,7 @@ local ScanPlants = {
     ["Sunflower"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Sunzio"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Tomade Torelli"] = { kg = 15, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Tomatrio"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 2, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Tomatrio"] = { kg = 15, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Watermelon"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false }
 }
 
