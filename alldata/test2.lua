@@ -1,10 +1,6 @@
-print("Scanner Script: Initializing...")
-
 if not game:IsLoaded() then
-    print("Scanner Script: Game not loaded, waiting...")
     game.Loaded:Wait()
 end
-print("Scanner Script: Game is Loaded.")
 wait(2)
 
 function missing(t, f, fallback)
@@ -24,8 +20,6 @@ if queueteleport then
             queueteleport("loadstring(game:HttpGet('" .. SCRIPT_URL .. "'))()")
         end
     end)
-else
-    print("Scanner Script: queue_on_teleport not found. Script will not re-execute.")
 end
 
 local PlaceID = game.PlaceId
@@ -66,7 +60,6 @@ end
 local hopStateContent = RobustReadFile(AutoHopFile)
 if hopStateContent == "true" then
     isAutoHopping = true
-    print("Scanner Script: Auto-hop is ON from previous session.")
 end
 
 local serversFileContent = RobustReadFile(NotSameServersFile)
@@ -140,7 +133,6 @@ local function CheckForAutoHop(scrollingFrame, noDataLabel)
     noDataLabel.Visible = not itemsVisible
     
     if not itemsVisible and isAutoHopping then
-        print("Scanner Script: Last item removed, auto-hop re-enabled. Hopping.")
         HopServer()
     end
 end
@@ -190,12 +182,10 @@ local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 
 if not Plrs.LocalPlayer then
-    print("Scanner Script: Waiting for LocalPlayer...")
     repeat wait() until Plrs.LocalPlayer
 end
 
 local MY_USERNAME = Plrs.LocalPlayer.Name
-print("Scanner Script: LocalPlayer found: " .. MY_USERNAME)
 
 local blocked = {"egg","seed","[pick up plants]","bat","handcuffs","water","potion","frost blower","frost grenade","banana gun","carrot launcher","base card pack","exp","view cards","taser"}
 
@@ -434,14 +424,18 @@ local function buildScanResults()
             local shouldAddItem = false
             local isGlobalMutationWhitelisted = false
             if itemMutation ~= "Normal" then
-                 isGlobalMutationWhitelisted = ScanMutations[itemMutation]
+                 isGlobalMutationWhitelisted = ScanMutations[itemMutation] ~= nil
             end
 
             if specificScanData then
-                local mutationKg = (specificScanData.mutations and specificScanData.mutationsBypassKg) and specificScanData.mutations[itemMutation]
+                local mutationKg
+                
+                if specificScanData.mutations and specificScanData.mutationsBypassKg then
+                    mutationKg = specificScanData.mutations[itemMutation]
+                end
 
-                if mutationKg ~= nil then
-                    if sizeInKg >= mutationKg then
+                if type(mutationKg) == "number" then
+                    if sizeInKg >= mutationKg then  
                         shouldAddItem = true
                     end
                 else
@@ -504,7 +498,6 @@ local highlightedPlayers = {}
 
 local function RefreshScanData()
     if not scannerUI or not scannerUI.Parent then return false end
-    print("Scanner Script: RefreshScanData() called.")
     local scanResults = buildScanResults()
     
     local currentPlayers = {}
@@ -517,15 +510,12 @@ local function RefreshScanData()
     
     local dataFound
     currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
-    print("Scanner Script: UI updated from refresh.")
     return dataFound
 end
 
 local function createUI()
-    print("Scanner Script: createUI() called.")
     local oldGui = CoreGui:FindFirstChild("ScannerUI")
     if oldGui then
-        print("Scanner Script: Found old UI, destroying it.")
         oldGui:Destroy()
     end
     
@@ -829,7 +819,6 @@ local function createUI()
     end)
     
     closeButton.MouseButton1Click:Connect(function()
-        print("Scanner Script: Close button clicked. Destroying UI.")
         isAutoHopping = false
         RobustWriteFile(AutoHopFile, "false")
         screenGui:Destroy()
@@ -841,11 +830,9 @@ local function createUI()
         isAutoHopping = not isAutoHopping
         if isAutoHopping then
             RobustWriteFile(AutoHopFile, "true")
-            print("Scanner Script: Auto-hop enabled. Checking list...")
             CheckForAutoHop(scrollingFrame, noDataLabel)
         else
             RobustWriteFile(AutoHopFile, "false")
-            print("Scanner Script: Auto-hop disabled.")
         end
         updateAutoHopButtonVisuals()
     end)
@@ -856,13 +843,10 @@ local function createUI()
     end)
     
     refreshButton.MouseButton1Click:Connect(function()
-        print("Scanner Script: Refresh button clicked.")
         local dataFound = RefreshScanData()
         if isAutoHopping and not dataFound then
-            print("Scanner Script: Auto-hop is ON and refresh found no items. Hopping.")
             HopServer()
         elseif isAutoHopping and dataFound then
-            print("Scanner Script: Auto-hop is ON, but refresh found items. Stopping auto-hop.")
             isAutoHopping = false
             RobustWriteFile(AutoHopFile, "false")
             updateAutoHopButtonVisuals()
@@ -870,7 +854,6 @@ local function createUI()
     end)
     
     screenGui.Parent = CoreGui
-    print("Scanner Script: UI created and parented to CoreGui.")
     return screenGui
 end
 
@@ -1008,10 +991,8 @@ local initialDataFound
 currentFrames, initialDataFound = updateUI(scannerUI, initialScanResults, currentFrames, highlightedPlayers)
 
 if isAutoHopping and not initialDataFound then
-    print("Scanner Script: Auto-hop is ON from previous session. No items found. Hopping.")
     HopServer()
 elseif isAutoHopping and initialDataFound then
-    print("Scanner Script: Auto-hop is ON, but items found on load. Stopping auto-hop.")
     isAutoHopping = false
     RobustWriteFile(AutoHopFile, "false")
     if scannerUI and scannerUI.Parent then
@@ -1024,11 +1005,9 @@ elseif isAutoHopping and initialDataFound then
 end
 
 spawn(function()
-    print("Scanner Script: Main scanner loop started.")
     wait(5) 
     
     while scannerUI and scannerUI.Parent do
-        print("Scanner Script: buildScanResults() running...")
         local scanResults = buildScanResults()
         
         local currentPlayers = {}
@@ -1042,15 +1021,12 @@ spawn(function()
         local dataFound
         
         currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
-        print("Scanner Script: UI updated.")
         
         if isAutoHopping then
             if not dataFound then
-                print("Scanner Script: Auto-hopping, nothing found. Hopping to new server.")
                 wait(2) 
                 HopServer()
             else
-                print("Scanner Script: Auto-hopping, item found! Stopping.")
                 isAutoHopping = false
                 RobustWriteFile(AutoHopFile, "false")
                 if scannerUI and scannerUI.Parent then
@@ -1066,7 +1042,6 @@ spawn(function()
         wait(5)
     end
     
-    print("Scanner Script: Main loop ended. Cleaning up highlights.")
     for playerName, _ in pairs(highlightedPlayers) do
         local p = Plrs:FindFirstChild(playerName)
         local char = p and p.Character
