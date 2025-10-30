@@ -79,20 +79,37 @@ else
 end
 
 function TPReturner()
-    local Site;
-    if foundAnything == "" then
-        Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true'))
-    else
-        Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true&cursor=' .. foundAnything))
+    local Site
+    local success, result = pcall(function()
+        local url
+        if foundAnything == "" then
+            url = 'https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true'
+        else
+            url = 'https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true&cursor=' .. foundAnything
+        end
+        local raw = game:HttpGet(url)
+        return HttpService:JSONDecode(raw)
+    end)
+
+    if not success or not result then
+        return
     end
+
+    Site = result
+    
     local ID = ""
     if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
         foundAnything = Site.nextPageCursor
     end
+    
+    if not Site.data then
+        return
+    end
+
     for i,v in pairs(Site.data) do
         local Possible = true
         ID = tostring(v.id)
-        if tonumber(v.maxPlayers) > tonumber(v.playing) then
+        if (tonumber(v.maxPlayers) or 0) > (tonumber(v.playing) or 0) then
             for j = 2, #AllIDs do
                 if ID == tostring(AllIDs[j]) then
                     Possible = false
@@ -123,6 +140,7 @@ local function HopServer()
 end
 
 local function CheckForAutoHop(scrollingFrame, noDataLabel)
+    if not scrollingFrame or not noDataLabel then return end
     local itemsVisible = false
     for _, child in ipairs(scrollingFrame:GetChildren()) do
         if child:IsA("Frame") and child.Visible and child.Name ~= "ItemTemplate" then
@@ -144,7 +162,7 @@ local MAX_KG_THRESHOLD_PLANT = 10
 local MAX_KG_THRESHOLD_BRAINROT = 100
 
 local ScanPlants = {
-    ["Troll Mango"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Troll Mango"] = { kg = 100, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Commando Apple"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["King Limone"] = { kg = 3, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Aubie"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
@@ -156,8 +174,8 @@ local ScanPlants = {
     ["Dragon Fruit"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Eggplant"] = { kg = 75, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Grape"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Mango"] = { kg = 6, mutations = {Diamond = 2, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Mr Carrot"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 3}, mutationsBypassKg = true, ignore = false },
+    ["Mango"] = { kg = 5, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Mr Carrot"] = { kg = 10, mutations = {Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Pine-a-Painter"] = { kg = 10, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Pumpkin"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Shroombino"] = { kg = 10, mutations = {Diamond = 3, Ruby = 3, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
@@ -165,7 +183,7 @@ local ScanPlants = {
     ["Sunflower"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Sunzio"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Tomade Torelli"] = { kg = 15, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Tomatrio"] = { kg = 15, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Tomatrio"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 2, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Watermelon"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false }
 }
 
@@ -205,6 +223,7 @@ local function cleanName(name)
 end
 
 local function shouldSkip(name)
+    if not name then return true end
     local lower = name:lower()
     for _,word in ipairs(blocked) do
         if lower:find(word, 1, true) then
@@ -232,7 +251,7 @@ local function parseSizeToKg(sizeString)
 end
 
 local function parseTool(tool)
-    if shouldSkip(tool.Name) then return nil end
+    if not tool or shouldSkip(tool.Name) then return nil end
     local isPlant = tool:GetAttribute("IsPlant")
     if isPlant then
         local data = {}
@@ -279,6 +298,7 @@ end
 
 local function scanPlayer(player)
     local items = {}
+    if not player then return items end
     local function scan(parent)
         if not parent then return end
         for _,tool in ipairs(parent:GetChildren()) do
@@ -301,6 +321,7 @@ local function scanPlayer(player)
 end
 
 local function getPlotBrainrotData(plotModel)
+    if not plotModel then return nil end
     local data = {}
     data.Type = "Brainrot"
     local brainrotPart = plotModel:FindFirstChild("Brainrot")
@@ -317,6 +338,7 @@ end
 
 local function scanPlotBrainrots(player)
     local items = {}
+    if not player then return items end
     local plots = Ws:FindFirstChild("Plots")
     if not plots then return items end
     for _, plot in ipairs(plots:GetChildren()) do
@@ -337,6 +359,7 @@ local function scanPlotBrainrots(player)
 end
 
 local function getPlotPlantData(plantModel)
+    if not plantModel then return nil end
     local data = {}
     data.Type = "Plant"
     data.Name = cleanName(plantModel.Name)
@@ -359,6 +382,7 @@ end
 
 local function scanPlotPlants(player)
     local items = {}
+    if not player then return items end
     local plots = Ws:FindFirstChild("Plots")
     if not plots then return items end
     for _, plot in ipairs(plots:GetChildren()) do
@@ -399,92 +423,92 @@ local function buildScanResults()
         local pData = { Brainrots = { Items = {} }, Plants = { Items = {} } }
         
         for _, itemData in ipairs(allItems) do
-            local typ = itemData.Type
-            local name = itemData.Name or "Unknown"
-            
-            local list, searchList, generalThreshold
-            if typ == "Plant" then
-                list = pData.Plants.Items
-                searchList = ScanPlants
-                generalThreshold = MAX_KG_THRESHOLD_PLANT
-            else
-                list = pData.Brainrots.Items
-                searchList = ScanBrainrots
-                generalThreshold = MAX_KG_THRESHOLD_BRAINROT
-            end
-            
-            local specificScanData = searchList[name]
-            local sizeInKg = parseSizeToKg(itemData.Size)
-            local itemMutation = itemData.Mutation or "Normal"
-
-            if specificScanData and specificScanData.ignore then
-                continue
-            end
-            
-            local shouldAddItem = false
-            local isGlobalMutationWhitelisted = false
-            if itemMutation ~= "Normal" then
-                 isGlobalMutationWhitelisted = ScanMutations[itemMutation] ~= nil
-            end
-
-            if specificScanData then
-                local mutationKg
+            if itemData then
+                local typ = itemData.Type
+                local name = itemData.Name or "Unknown"
                 
-                if specificScanData.mutations and specificScanData.mutationsBypassKg then
-                    mutationKg = specificScanData.mutations[itemMutation]
-                end
-
-                if type(mutationKg) == "number" then
-                    if sizeInKg >= mutationKg then  
-                        shouldAddItem = true
-                    end
-                else
-                    if sizeInKg >= specificScanData.kg then
-                        shouldAddItem = true
-                    end
-                end
-            else
-                if typ == "Plant" and sizeInKg > generalThreshold then
-                    shouldAddItem = true
-                elseif typ == "Brainrot" and sizeInKg > generalThreshold then
-                    shouldAddItem = true
-                end
-            end
-            
-            if shouldAddItem or isGlobalMutationWhitelisted then
-                if not list[name] then
-                    list[name] = { Instances = {}, Summary = { TotalCount = 0 } }
-                    list[name].Summary.InstanceCounts = {}
-                end
-                
-                local entry = list[name]
-                entry.Summary.TotalCount = entry.Summary.TotalCount + 1
-                
-                local val
+                local list, searchList, generalThreshold
                 if typ == "Plant" then
-                    val = itemData.Mutation or "Normal"
-                    if val == "Normal" then
-                        val = itemData.Colors or "Unknown"
-                    end
+                    list = pData.Plants.Items
+                    searchList = ScanPlants
+                    generalThreshold = MAX_KG_THRESHOLD_PLANT
                 else
-                    val = itemData.Mutation or "Normal"
+                    list = pData.Brainrots.Items
+                    searchList = ScanBrainrots
+                    generalThreshold = MAX_KG_THRESHOLD_BRAINROT
                 end
                 
-                local sizeVal = itemData.Size
-                if not sizeVal or sizeVal == " kg" then
-                    sizeVal = "Unknown kg"
-                end
-                
-                local summaryKey = tostring(sizeVal) .. ", " .. tostring(val)
-                entry.Summary.InstanceCounts[summaryKey] = (entry.Summary.InstanceCounts[summaryKey] or 0) + 1
-                
-                local instanceData = {}
-                for k, v in pairs(itemData) do
-                    if k ~= "Name" and k ~= "Type" then
-                        instanceData[k] = v
+                local specificScanData = searchList[name]
+                local sizeInKg = parseSizeToKg(itemData.Size)
+                local itemMutation = itemData.Mutation or "Normal"
+
+                if not (specificScanData and specificScanData.ignore) then
+                    local shouldAddItem = false
+                    local isGlobalMutationWhitelisted = false
+                    if itemMutation ~= "Normal" then
+                        isGlobalMutationWhitelisted = ScanMutations[itemMutation] ~= nil
+                    end
+
+                    if specificScanData then
+                        local mutationKg
+                        
+                        if specificScanData.mutations and specificScanData.mutationsBypassKg then
+                            mutationKg = specificScanData.mutations[itemMutation]
+                        end
+
+                        if type(mutationKg) == "number" then
+                            if sizeInKg >= mutationKg then  
+                                shouldAddItem = true
+                            end
+                        else
+                            if sizeInKg >= specificScanData.kg then
+                                shouldAddItem = true
+                            end
+                        end
+                    else
+                        if typ == "Plant" and sizeInKg > generalThreshold then
+                            shouldAddItem = true
+                        elseif typ == "Brainrot" and sizeInKg > generalThreshold then
+                            shouldAddItem = true
+                        end
+                    end
+                    
+                    if shouldAddItem or isGlobalMutationWhitelisted then
+                        if not list[name] then
+                            list[name] = { Instances = {}, Summary = { TotalCount = 0 } }
+                            list[name].Summary.InstanceCounts = {}
+                        end
+                        
+                        local entry = list[name]
+                        entry.Summary.TotalCount = entry.Summary.TotalCount + 1
+                        
+                        local val
+                        if typ == "Plant" then
+                            val = itemData.Mutation or "Normal"
+                            if val == "Normal" then
+                                val = itemData.Colors or "Unknown"
+                            end
+                        else
+                            val = itemData.Mutation or "Normal"
+                        end
+                        
+                        local sizeVal = itemData.Size
+                        if not sizeVal or sizeVal == " kg" then
+                            sizeVal = "Unknown kg"
+                        end
+                        
+                        local summaryKey = tostring(sizeVal) .. ", " .. tostring(val)
+                        entry.Summary.InstanceCounts[summaryKey] = (entry.Summary.InstanceCounts[summaryKey] or 0) + 1
+                        
+                        local instanceData = {}
+                        for k, v in pairs(itemData) do
+                            if k ~= "Name" and k ~= "Type" then
+                                instanceData[k] = v
+                            end
+                        end
+                        table.insert(entry.Instances, instanceData)
                     end
                 end
-                table.insert(entry.Instances, instanceData)
             end
         end
         results[p.Name] = pData
@@ -498,7 +522,9 @@ local highlightedPlayers = {}
 
 local function RefreshScanData()
     if not scannerUI or not scannerUI.Parent then return false end
-    local scanResults = buildScanResults()
+    
+    local success, scanResults = pcall(buildScanResults)
+    if not success or not scanResults then return false end
     
     local currentPlayers = {}
     for _,p in ipairs(Plrs:GetPlayers()) do currentPlayers[p.Name] = true end
@@ -514,9 +540,11 @@ local function RefreshScanData()
 end
 
 local function createUI()
+    if not CoreGui then return nil end
+    
     local oldGui = CoreGui:FindFirstChild("ScannerUI")
     if oldGui then
-        oldGui:Destroy()
+        pcall(function() oldGui:Destroy() end)
     end
     
     local screenGui = Instance.new("ScreenGui")
@@ -821,7 +849,7 @@ local function createUI()
     closeButton.MouseButton1Click:Connect(function()
         isAutoHopping = false
         RobustWriteFile(AutoHopFile, "false")
-        screenGui:Destroy()
+        pcall(function() screenGui:Destroy() end)
     end)
     
     hopButton.MouseButton1Click:Connect(HopServer)
@@ -853,129 +881,140 @@ local function createUI()
         end
     end)
     
-    screenGui.Parent = CoreGui
+    pcall(function() screenGui.Parent = CoreGui end)
     return screenGui
 end
 
 local function updateUI(ui, scanResults, currentFrames, highlightedPlayers)
+    if not ui or not scanResults or not currentFrames or not highlightedPlayers then return {}, false end
+    
     local scrollingFrame = ui.MainFrame.ScrollingFrame
     local itemTemplate = scrollingFrame.ItemTemplate
     local detailTemplate = itemTemplate.DetailTemplate
     local noDataLabel = scrollingFrame.NoDataLabel
     
+    if not scrollingFrame or not itemTemplate or not detailTemplate or not noDataLabel then return {}, false end
+
     local newFrames = {}
     local dataFound = false
     local layoutOrder = 1
     
     for playerName, pData in pairs(scanResults) do
-        local function processCategory(items, categoryName)
-            for itemName, itemData in pairs(items) do
-                dataFound = true
-                local key = playerName .. "_" .. itemName
-                local existingFrame = currentFrames[key]
-                local newItem
-                
-                if existingFrame then
-                    newItem = existingFrame
-                    currentFrames[key] = nil
-                else
-                    newItem = itemTemplate:Clone()
-                    newItem.Name = key
-                    newItem.Parent = scrollingFrame
-                end
-                
-                newItem:SetAttribute("PlayerName", playerName)
-                newItem.PlayerFrame.PlayerNameLabel.Text = "Player: " .. playerName
-                newItem.ItemName.Text = "Item: " .. itemName .. " (" .. categoryName .. ")"
-                newItem.Summary.Text = "Total Count: " .. itemData.Summary.TotalCount
-                newItem.LayoutOrder = layoutOrder
-                layoutOrder = layoutOrder + 1
-                
-                local highlightButton = newItem.PlayerFrame.HighlightButton
-                local removeItemButton = newItem.PlayerFrame.RemoveItemButton
-                
-                local function updateHighlightButtonVisuals()
-                    if highlightedPlayers[playerName] then
-                        highlightButton.BackgroundColor3 = Color3.fromRGB(80, 200, 80)
-                        highlightButton.Text = "ON"
-                    else
-                        highlightButton.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-                        highlightButton.Text = "OFF"
-                    end
-                end
-                
-                updateHighlightButtonVisuals()
-                
-                if not existingFrame then
-                    highlightButton.MouseButton1Click:Connect(function()
-                        local frame = highlightButton.Parent.Parent
-                        local pName = frame:GetAttribute("PlayerName")
-                        if not pName then return end
+        if pData then
+            local function processCategory(items, categoryName)
+                if not items then return end
+                for itemName, itemData in pairs(items) do
+                    if itemData then
+                        dataFound = true
+                        local key = playerName .. "_" .. itemName
+                        local existingFrame = currentFrames[key]
+                        local newItem
                         
-                        local p = Plrs:FindFirstChild(pName)
-                        local char = p and p.Character
-                        
-                        if highlightedPlayers[pName] then
-                            highlightedPlayers[pName] = nil
-                            if char then
-                                local h = char:FindFirstChild("ScannerHighlight")
-                                if h then h:Destroy() end
-                            end
+                        if existingFrame then
+                            newItem = existingFrame
+                            currentFrames[key] = nil
                         else
-                            highlightedPlayers[pName] = true
-                            if char then
-                                local h = Instance.new("Highlight")
-                                h.Name = "ScannerHighlight"
-                                h.OutlineColor = Color3.fromRGB(255, 255, 255)
-                                h.FillTransparency = 1
-                                h.Adornee = char
-                                h.Parent = char
+                            newItem = itemTemplate:Clone()
+                            newItem.Name = key
+                            newItem.Parent = scrollingFrame
+                        end
+                        
+                        newItem:SetAttribute("PlayerName", playerName)
+                        newItem.PlayerFrame.PlayerNameLabel.Text = "Player: " .. playerName
+                        newItem.ItemName.Text = "Item: " .. itemName .. " (" .. categoryName .. ")"
+                        newItem.Summary.Text = "Total Count: " .. (itemData.Summary and itemData.Summary.TotalCount or 0)
+                        newItem.LayoutOrder = layoutOrder
+                        layoutOrder = layoutOrder + 1
+                        
+                        local highlightButton = newItem.PlayerFrame.HighlightButton
+                        local removeItemButton = newItem.PlayerFrame.RemoveItemButton
+                        
+                        local function updateHighlightButtonVisuals()
+                            if highlightedPlayers[playerName] then
+                                highlightButton.BackgroundColor3 = Color3.fromRGB(80, 200, 80)
+                                highlightButton.Text = "ON"
+                            else
+                                highlightButton.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+                                highlightButton.Text = "OFF"
                             end
                         end
+                        
                         updateHighlightButtonVisuals()
-                    end)
-                    
-                    removeItemButton.MouseButton1Click:Connect(function()
-                        local frame = removeItemButton.Parent.Parent
-                        local key = frame.Name
-                        frame:Destroy()
-                        currentFrames[key] = nil 
-                        CheckForAutoHop(scrollingFrame, noDataLabel)
-                    end)
-                end
-                
-                local detailsFrame = newItem.DetailsFrame
-                detailsFrame:ClearAllChildren()
-                local detailsLayout = Instance.new("UIListLayout")
-                detailsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-                detailsLayout.Padding = UDim.new(0, 0)
-                detailsLayout.Parent = detailsFrame
-                
-                local detailOrder = 1
-                
-                local instanceCounts = itemData.Summary.InstanceCounts
-                if instanceCounts then
-                    for combinedKey, count in pairs(instanceCounts) do
-                        local newDetail = detailTemplate:Clone()
-                        newDetail.Text = "  - " .. tostring(combinedKey) .. ": " .. tostring(count)
-                        newDetail.LayoutOrder = detailOrder
-                        newDetail.Visible = true
-                        newDetail.Parent = detailsFrame
-                        detailOrder = detailOrder + 1
+                        
+                        if not existingFrame then
+                            highlightButton.MouseButton1Click:Connect(function()
+                                local frame = highlightButton.Parent.Parent
+                                if not frame then return end
+                                local pName = frame:GetAttribute("PlayerName")
+                                if not pName then return end
+                                
+                                local p = Plrs:FindFirstChild(pName)
+                                local char = p and p.Character
+                                
+                                if highlightedPlayers[pName] then
+                                    highlightedPlayers[pName] = nil
+                                    if char then
+                                        local h = char:FindFirstChild("ScannerHighlight")
+                                        if h then pcall(function() h:Destroy() end) end
+                                    end
+                                else
+                                    highlightedPlayers[pName] = true
+                                    if char then
+                                        local h = Instance.new("Highlight")
+                                        h.Name = "ScannerHighlight"
+                                        h.OutlineColor = Color3.fromRGB(255, 255, 255)
+                                        h.FillTransparency = 1
+                                        h.Adornee = char
+                                        h.Parent = char
+                                    end
+                                end
+                                updateHighlightButtonVisuals()
+                            end)
+                            
+                            removeItemButton.MouseButton1Click:Connect(function()
+                                local frame = removeItemButton.Parent.Parent
+                                if not frame then return end
+                                local key = frame.Name
+                                pcall(function() frame:Destroy() end)
+                                currentFrames[key] = nil 
+                                CheckForAutoHop(scrollingFrame, noDataLabel)
+                            end)
+                        end
+                        
+                        local detailsFrame = newItem.DetailsFrame
+                        detailsFrame:ClearAllChildren()
+                        local detailsLayout = Instance.new("UIListLayout")
+                        detailsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                        detailsLayout.Padding = UDim.new(0, 0)
+                        detailsLayout.Parent = detailsFrame
+                        
+                        local detailOrder = 1
+                        
+                        local instanceCounts = itemData.Summary and itemData.Summary.InstanceCounts
+                        if instanceCounts then
+                            for combinedKey, count in pairs(instanceCounts) do
+                                local newDetail = detailTemplate:Clone()
+                                newDetail.Text = "  - " .. tostring(combinedKey) .. ": " .. tostring(count)
+                                newDetail.LayoutOrder = detailOrder
+                                newDetail.Visible = true
+                                newDetail.Parent = detailsFrame
+                                detailOrder = detailOrder + 1
+                            end
+                        end
+                        
+                        newItem.Visible = true
+                        newFrames[key] = newItem
                     end
                 end
-                
-                newItem.Visible = true
-                newFrames[key] = newItem
             end
+            
+            if pData.Plants then processCategory(pData.Plants.Items, "Plant") end
+            if pData.Brainrots then processCategory(pData.Brainrots.Items, "Brainrot") end
         end
-        
-        processCategory(pData.Plants.Items, "Plant")
-        processCategory(pData.Brainrots.Items, "Brainrot")
     end
     
     for key, frame in pairs(currentFrames) do
-        frame:Destroy()
+        pcall(function() frame:Destroy() end)
     end
     
     noDataLabel.Visible = not dataFound
@@ -984,71 +1023,76 @@ local function updateUI(ui, scanResults, currentFrames, highlightedPlayers)
 end
 
 scannerUI = createUI()
-currentFrames = {}
 
-local initialScanResults = buildScanResults()
-local initialDataFound
-currentFrames, initialDataFound = updateUI(scannerUI, initialScanResults, currentFrames, highlightedPlayers)
+if scannerUI then
+    local success, initialScanResults = pcall(buildScanResults)
+    local initialDataFound = false
 
-if isAutoHopping and not initialDataFound then
-    HopServer()
-elseif isAutoHopping and initialDataFound then
-    isAutoHopping = false
-    RobustWriteFile(AutoHopFile, "false")
-    if scannerUI and scannerUI.Parent then
-        local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
-        if autoHopBtn then
-            autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-            autoHopBtn.Text = "OFF"
-        end
+    if success and initialScanResults then
+        currentFrames, initialDataFound = updateUI(scannerUI, initialScanResults, currentFrames, highlightedPlayers)
     end
-end
 
-spawn(function()
-    wait(5) 
-    
-    while scannerUI and scannerUI.Parent do
-        local scanResults = buildScanResults()
-        
-        local currentPlayers = {}
-        for _,p in ipairs(Plrs:GetPlayers()) do currentPlayers[p.Name] = true end
-        for playerName, isHighlighted in pairs(highlightedPlayers) do
-            if not currentPlayers[playerName] then
-                highlightedPlayers[playerName] = nil
+    if isAutoHopping and not initialDataFound then
+        HopServer()
+    elseif isAutoHopping and initialDataFound then
+        isAutoHopping = false
+        RobustWriteFile(AutoHopFile, "false")
+        if scannerUI and scannerUI.Parent then
+            local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
+            if autoHopBtn then
+                autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+                autoHopBtn.Text = "OFF"
             end
         end
+    end
+
+    spawn(function()
+        wait(5) 
         
-        local dataFound
-        
-        currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
-        
-        if isAutoHopping then
-            if not dataFound then
-                wait(2) 
-                HopServer()
-            else
-                isAutoHopping = false
-                RobustWriteFile(AutoHopFile, "false")
-                if scannerUI and scannerUI.Parent then
-                    local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
-                    if autoHopBtn then
-                        autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-                        autoHopBtn.Text = "OFF"
+        while scannerUI and scannerUI.Parent do
+            local success, scanResults = pcall(buildScanResults)
+            local dataFound = false
+            
+            if success and scanResults then
+                local currentPlayers = {}
+                for _,p in ipairs(Plrs:GetPlayers()) do currentPlayers[p.Name] = true end
+                for playerName, isHighlighted in pairs(highlightedPlayers) do
+                    if not currentPlayers[playerName] then
+                        highlightedPlayers[playerName] = nil
+                    end
+                end
+                
+                currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
+            end
+            
+            if isAutoHopping then
+                if not dataFound then
+                    wait(2) 
+                    HopServer()
+                else
+                    isAutoHopping = false
+                    RobustWriteFile(AutoHopFile, "false")
+                    if scannerUI and scannerUI.Parent then
+                        local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
+                        if autoHopBtn then
+                            autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+                            autoHopBtn.Text = "OFF"
+                        end
                     end
                 end
             end
+            
+            wait(5)
         end
         
-        wait(5)
-    end
-    
-    for playerName, _ in pairs(highlightedPlayers) do
-        local p = Plrs:FindFirstChild(playerName)
-        local char = p and p.Character
-        if char then
-            local h = char:FindFirstChild("ScannerHighlight")
-            if h then h:Destroy() end
+        for playerName, _ in pairs(highlightedPlayers) do
+            local p = Plrs:FindFirstChild(playerName)
+            local char = p and p.Character
+            if char then
+                local h = char:FindFirstChild("ScannerHighlight")
+                if h then pcall(function() h:Destroy() end) end
+            end
         end
-    end
-    highlightedPlayers = {}
-end)
+        highlightedPlayers = {}
+    end)
+end
