@@ -157,7 +157,7 @@ local ScanPlants = {
     ["Eggplant"] = { kg = 75, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Grape"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Mango"] = { kg = 5, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Mr Carrot"] = { kg = 10, mutations = {Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Mr Carrot"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 3}, mutationsBypassKg = true, ignore = false },
     ["Pine-a-Painter"] = { kg = 10, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Pumpkin"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Shroombino"] = { kg = 10, mutations = {Diamond = 3, Ruby = 3, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
