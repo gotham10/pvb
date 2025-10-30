@@ -34,7 +34,10 @@ local foundAnything = ""
 local actualHour = os.date("!*t").hour
 local Deleted = false
 local NotSameServersFile = "NotSameServers.json"
+local AutoHopFile = "ScannerAutoHop.json"
 local HttpService = game:GetService("HttpService")
+
+local isAutoHopping = false
 
 local function RobustReadFile(file)
     local content = ""
@@ -58,6 +61,12 @@ local function RobustWriteFile(file, content)
         wait(0.5)
     end
     return false
+end
+
+local hopStateContent = RobustReadFile(AutoHopFile)
+if hopStateContent == "true" then
+    isAutoHopping = true
+    print("Scanner Script: Auto-hop is ON from previous session.")
 end
 
 local serversFileContent = RobustReadFile(NotSameServersFile)
@@ -119,6 +128,23 @@ local function HopServer()
         end
     end)
 end
+
+local function CheckForAutoHop(scrollingFrame, noDataLabel)
+    local itemsVisible = false
+    for _, child in ipairs(scrollingFrame:GetChildren()) do
+        if child:IsA("Frame") and child.Visible and child.Name ~= "ItemTemplate" then
+            itemsVisible = true
+            break
+        end
+    end
+    noDataLabel.Visible = not itemsVisible
+    
+    if not itemsVisible and isAutoHopping then
+        print("Scanner Script: Last item removed, auto-hop re-enabled. Hopping.")
+        HopServer()
+    end
+end
+
 
 local HIDE_MY_DATA = true
 
@@ -486,7 +512,6 @@ end
 local scannerUI = nil
 local currentFrames = {}
 local highlightedPlayers = {}
-_G.isAutoHopping = _G.isAutoHopping or false
 
 local function createUI()
     print("Scanner Script: createUI() called.")
@@ -522,7 +547,7 @@ local function createUI()
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, -180, 1, 0)
+    title.Size = UDim2.new(1, -190, 1, 0)
     title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     title.BackgroundTransparency = 1
     title.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -585,7 +610,7 @@ local function createUI()
     hideDataButton.Parent = header
 
     local function updateAutoHopButtonVisuals()
-        if _G.isAutoHopping then
+        if isAutoHopping then
             autoHopButton.BackgroundColor3 = Color3.fromRGB(80, 200, 80)
             autoHopButton.Text = "ON"
         else
@@ -672,7 +697,7 @@ local function createUI()
 
     local playerNameLabel = Instance.new("TextLabel")
     playerNameLabel.Name = "PlayerNameLabel"
-    playerNameLabel.Size = UDim2.new(1, -60, 1, 0)
+    playerNameLabel.Size = UDim2.new(1, -90, 1, 0)
     playerNameLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     playerNameLabel.BackgroundTransparency = 1
     playerNameLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -686,6 +711,7 @@ local function createUI()
     local highlightButton = Instance.new("TextButton")
     highlightButton.Name = "HighlightButton"
     highlightButton.Size = UDim2.new(0, 50, 1, 0)
+    highlightButton.Position = UDim2.new(1, -80, 0, 0)
     highlightButton.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
     highlightButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     highlightButton.Text = "OFF"
@@ -693,6 +719,18 @@ local function createUI()
     highlightButton.TextSize = 14
     highlightButton.LayoutOrder = 2
     highlightButton.Parent = playerFrame
+    
+    local removeItemButton = Instance.new("TextButton")
+    removeItemButton.Name = "RemoveItemButton"
+    removeItemButton.Size = UDim2.new(0, 30, 1, 0)
+    removeItemButton.Position = UDim2.new(1, -30, 0, 0)
+    removeItemButton.BackgroundColor3 = Color3.fromRGB(180, 40, 40)
+    removeItemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    removeItemButton.Text = "X"
+    removeItemButton.Font = Enum.Font.SourceSansBold
+    removeItemButton.TextSize = 14
+    removeItemButton.LayoutOrder = 3
+    removeItemButton.Parent = playerFrame
 
     local itemName = Instance.new("TextLabel")
     itemName.Name = "ItemName"
@@ -773,21 +811,24 @@ local function createUI()
     
     closeButton.MouseButton1Click:Connect(function()
         print("Scanner Script: Close button clicked. Destroying UI.")
-        _G.isAutoHopping = false
+        isAutoHopping = false
+        RobustWriteFile(AutoHopFile, "false")
         screenGui:Destroy()
     end)
     
     hopButton.MouseButton1Click:Connect(HopServer)
     
     autoHopButton.MouseButton1Click:Connect(function()
-        _G.isAutoHopping = not _G.isAutoHopping
-        updateAutoHopButtonVisuals()
-        if _G.isAutoHopping then
-            print("Scanner Script: Auto-hop enabled. Starting hop...")
-            HopServer()
+        isAutoHopping = not isAutoHopping
+        if isAutoHopping then
+            RobustWriteFile(AutoHopFile, "true")
+            print("Scanner Script: Auto-hop enabled. Checking list...")
+            CheckForAutoHop(scrollingFrame, noDataLabel)
         else
+            RobustWriteFile(AutoHopFile, "false")
             print("Scanner Script: Auto-hop disabled.")
         end
+        updateAutoHopButtonVisuals()
     end)
     
     hideDataButton.MouseButton1Click:Connect(function()
@@ -835,6 +876,7 @@ local function updateUI(ui, scanResults, currentFrames, highlightedPlayers)
                 layoutOrder = layoutOrder + 1
                 
                 local highlightButton = newItem.PlayerFrame.HighlightButton
+                local removeItemButton = newItem.PlayerFrame.RemoveItemButton
                 
                 local function updateHighlightButtonVisuals()
                     if highlightedPlayers[playerName] then
@@ -875,6 +917,14 @@ local function updateUI(ui, scanResults, currentFrames, highlightedPlayers)
                             end
                         end
                         updateHighlightButtonVisuals()
+                    end)
+                    
+                    removeItemButton.MouseButton1Click:Connect(function()
+                        local frame = removeItemButton.Parent.Parent
+                        local key = frame.Name
+                        frame:Destroy()
+                        currentFrames[key] = nil 
+                        CheckForAutoHop(scrollingFrame, noDataLabel)
                     end)
                 end
                 
@@ -920,8 +970,28 @@ end
 scannerUI = createUI()
 currentFrames = {}
 
+local initialScanResults = buildScanResults()
+local initialDataFound
+currentFrames, initialDataFound = updateUI(scannerUI, initialScanResults, currentFrames, highlightedPlayers)
+
+if isAutoHopping and not initialDataFound then
+    print("Scanner Script: Auto-hop is ON from previous session. No items found. Hopping.")
+    HopServer()
+elseif isAutoHopping and initialDataFound then
+    print("Scanner Script: Auto-hop is ON, but items found on load. Stopping auto-hop.")
+    isAutoHopping = false
+    RobustWriteFile(AutoHopFile, "false")
+    local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
+    if autoHopBtn then
+        autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+        autoHopBtn.Text = "OFF"
+    end
+end
+
 spawn(function()
     print("Scanner Script: Main scanner loop started.")
+    wait(5) 
+    
     while scannerUI and scannerUI.Parent do
         print("Scanner Script: buildScanResults() running...")
         local scanResults = buildScanResults()
@@ -939,14 +1009,15 @@ spawn(function()
         currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
         print("Scanner Script: UI updated.")
         
-        if _G.isAutoHopping then
+        if isAutoHopping then
             if not dataFound then
                 print("Scanner Script: Auto-hopping, nothing found. Hopping to new server.")
-                wait(2)
+                wait(2) 
                 HopServer()
             else
                 print("Scanner Script: Auto-hopping, item found! Stopping.")
-                _G.isAutoHopping = false
+                isAutoHopping = false
+                RobustWriteFile(AutoHopFile, "false")
                 if scannerUI and scannerUI.Parent then
                     local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
                     if autoHopBtn then
