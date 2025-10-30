@@ -152,28 +152,28 @@ local MAX_KG_THRESHOLD_PLANT = 10
 local MAX_KG_THRESHOLD_BRAINROT = 100
 
 local ScanPlants = {
-    ["Troll Mango"] = { kg = 100, mutations = {"Diamond", "Ruby", "Neon", "Frozen"}, mutationsBypassKg = true, ignore = false },
-    ["Commando Apple"] = { kg = 0, mutations = {"Diamond", "Ruby", "Neon", "Frozen"}, mutationsBypassKg = true, ignore = false },
-    ["King Limone"] = { kg = 3, mutations = {"Diamond", "Ruby", "Neon", "Frozen"}, mutationsBypassKg = true, ignore = false },
+    ["Troll Mango"] = { kg = 100, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Commando Apple"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["King Limone"] = { kg = 3, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Aubie"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Cactus"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Carnivorous Plant"] = { kg = 20, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Cocotank"] = { kg = 20, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Copuccino"] = { kg = 10, mutations = {}, mutationsBypassKg = false, ignore = false },
+    ["Copuccino"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Don Fragola"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Dragon Fruit"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Eggplant"] = { kg = 75, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Grape"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Mango"] = { kg = 5, mutations = {"Diamond", "Ruby", "Neon", "Frozen"}, mutationsBypassKg = true, ignore = false },
-    ["Mr Carrot"] = { kg = 10, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Pine-a-Painter"] = { kg = 10, mutations = {}, mutationsBypassKg = false, ignore = false },
+    ["Mango"] = { kg = 5, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Mr Carrot"] = { kg = 10, mutations = {Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
+    ["Pine-a-Painter"] = { kg = 10, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Pumpkin"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Shroombino"] = { kg = 10, mutations = {}, mutationsBypassKg = false, ignore = false },
+    ["Shroombino"] = { kg = 10, mutations = {Diamond = 3, Ruby = 3, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Strawberry"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Sunflower"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Sunzio"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
     ["Tomade Torelli"] = { kg = 15, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Tomatrio"] = { kg = 10, mutations = {}, mutationsBypassKg = false, ignore = false },
+    ["Tomatrio"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 2, Frozen = 0}, mutationsBypassKg = true, ignore = false },
     ["Watermelon"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false }
 }
 
@@ -425,41 +425,30 @@ local function buildScanResults()
             
             local specificScanData = searchList[name]
             local sizeInKg = parseSizeToKg(itemData.Size)
+            local itemMutation = itemData.Mutation or "Normal"
 
             if specificScanData and specificScanData.ignore then
                 continue
             end
             
             local shouldAddItem = false
-
             local isGlobalMutationWhitelisted = false
-            if itemData.Mutation then
-                isGlobalMutationWhitelisted = ScanMutations[itemData.Mutation]
+            if itemMutation ~= "Normal" then
+                 isGlobalMutationWhitelisted = ScanMutations[itemMutation]
             end
 
             if specificScanData then
-                local kgMatch = sizeInKg >= specificScanData.kg
-                local itemMutation = itemData.Mutation or "Normal"
-                
-                if kgMatch then
-                    shouldAddItem = true
-                end
-                
-                local bypassKg = specificScanData.mutationsBypassKg or false
-                if not shouldAddItem and bypassKg and specificScanData.mutations and #specificScanData.mutations > 0 then
-                    local mutationMatch = false
-                    for _, filterMutation in ipairs(specificScanData.mutations) do
-                        if itemMutation == filterMutation then
-                            mutationMatch = true
-                            break
-                        end
+                local mutationKg = (specificScanData.mutations and specificScanData.mutationsBypassKg) and specificScanData.mutations[itemMutation]
+
+                if mutationKg ~= nil then
+                    if sizeInKg >= mutationKg then
+                        shouldAddItem = true
                     end
-                    
-                    if mutationMatch then
+                else
+                    if sizeInKg >= specificScanData.kg then
                         shouldAddItem = true
                     end
                 end
-                
             else
                 if typ == "Plant" and sizeInKg > generalThreshold then
                     shouldAddItem = true
@@ -513,6 +502,25 @@ local scannerUI = nil
 local currentFrames = {}
 local highlightedPlayers = {}
 
+local function RefreshScanData()
+    if not scannerUI or not scannerUI.Parent then return false end
+    print("Scanner Script: RefreshScanData() called.")
+    local scanResults = buildScanResults()
+    
+    local currentPlayers = {}
+    for _,p in ipairs(Plrs:GetPlayers()) do currentPlayers[p.Name] = true end
+    for playerName, isHighlighted in pairs(highlightedPlayers) do
+        if not currentPlayers[playerName] then
+            highlightedPlayers[playerName] = nil
+        end
+    end
+    
+    local dataFound
+    currentFrames, dataFound = updateUI(scannerUI, scanResults, currentFrames, highlightedPlayers)
+    print("Scanner Script: UI updated from refresh.")
+    return dataFound
+end
+
 local function createUI()
     print("Scanner Script: createUI() called.")
     local oldGui = CoreGui:FindFirstChild("ScannerUI")
@@ -547,7 +555,7 @@ local function createUI()
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, -190, 1, 0)
+    title.Size = UDim2.new(1, -220, 1, 0)
     title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     title.BackgroundTransparency = 1
     title.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -608,6 +616,17 @@ local function createUI()
     hideDataButton.Font = Enum.Font.SourceSansBold
     hideDataButton.TextSize = 20
     hideDataButton.Parent = header
+    
+    local refreshButton = Instance.new("TextButton")
+    refreshButton.Name = "RefreshButton"
+    refreshButton.Size = UDim2.new(0, 30, 1, 0)
+    refreshButton.Position = UDim2.new(1, -180, 0, 0)
+    refreshButton.BackgroundColor3 = Color3.fromRGB(80, 80, 200)
+    refreshButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+    refreshButton.Text = "R"
+    refreshButton.Font = Enum.Font.SourceSansBold
+    refreshButton.TextSize = 16
+    refreshButton.Parent = header
 
     local function updateAutoHopButtonVisuals()
         if isAutoHopping then
@@ -836,6 +855,20 @@ local function createUI()
         updateHideButtonVisuals()
     end)
     
+    refreshButton.MouseButton1Click:Connect(function()
+        print("Scanner Script: Refresh button clicked.")
+        local dataFound = RefreshScanData()
+        if isAutoHopping and not dataFound then
+            print("Scanner Script: Auto-hop is ON and refresh found no items. Hopping.")
+            HopServer()
+        elseif isAutoHopping and dataFound then
+            print("Scanner Script: Auto-hop is ON, but refresh found items. Stopping auto-hop.")
+            isAutoHopping = false
+            RobustWriteFile(AutoHopFile, "false")
+            updateAutoHopButtonVisuals()
+        end
+    end)
+    
     screenGui.Parent = CoreGui
     print("Scanner Script: UI created and parented to CoreGui.")
     return screenGui
@@ -981,10 +1014,12 @@ elseif isAutoHopping and initialDataFound then
     print("Scanner Script: Auto-hop is ON, but items found on load. Stopping auto-hop.")
     isAutoHopping = false
     RobustWriteFile(AutoHopFile, "false")
-    local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
-    if autoHopBtn then
-        autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-        autoHopBtn.Text = "OFF"
+    if scannerUI and scannerUI.Parent then
+        local autoHopBtn = scannerUI.MainFrame.Header:FindFirstChild("AutoHopButton")
+        if autoHopBtn then
+            autoHopBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+            autoHopBtn.Text = "OFF"
+        end
     end
 end
 
