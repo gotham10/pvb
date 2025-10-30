@@ -14,7 +14,7 @@ end
 
 local queueteleport = missing("function", queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport))
 
-local SCRIPT_URL = "YOUR_RAW_GITHUB_URL_HERE"
+local SCRIPT_URL = "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/alldata/test.lua"
 local KeepScriptRunning = true
 local TeleportCheck = false
 
