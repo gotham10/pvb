@@ -1,3 +1,21 @@
+local Config = _G.ScannerConfig
+if not Config then
+    print("Scanner Error: Config not found. Please run the loader.")
+    return
+end
+
+local SCRIPT_URL = Config.SCRIPT_URL
+local NotSameServersFile = Config.NotSameServersFile
+local AutoHopFile = Config.AutoHopFile
+local HIDE_MY_DATA = Config.HIDE_MY_DATA
+local MAX_KG_THRESHOLD_PLANT = Config.MAX_KG_THRESHOLD_PLANT
+local MAX_KG_THRESHOLD_BRAINROT = Config.MAX_KG_THRESHOLD_BRAINROT
+local ScanPlants = Config.ScanPlants
+local ScanBrainrots = Config.ScanBrainrots
+local ScanMutations = Config.ScanMutations
+local blocked = Config.blocked
+local Mutations = Config.Mutations
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -9,7 +27,6 @@ function missing(t, f, fallback)
 end
 
 local queueteleport = missing("function", queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport))
-local SCRIPT_URL = "https://raw.githubusercontent.com/gotham10/pvb/refs/heads/main/alldata/test2.lua"
 local KeepScriptRunning = true
 local TeleportCheck = false
 
@@ -27,8 +44,6 @@ local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
 local Deleted = false
-local NotSameServersFile = "NotSameServers.json"
-local AutoHopFile = "ScannerAutoHop.json"
 local HttpService = game:GetService("HttpService")
 
 local isAutoHopping = false
@@ -155,44 +170,6 @@ local function CheckForAutoHop(scrollingFrame, noDataLabel)
     end
 end
 
-
-local HIDE_MY_DATA = true
-
-local MAX_KG_THRESHOLD_PLANT = 10
-local MAX_KG_THRESHOLD_BRAINROT = 100
-
-local ScanPlants = {
-    ["Troll Mango"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Commando Apple"] = { kg = 0, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["King Limone"] = { kg = 3, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Aubie"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Cactus"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Carnivorous Plant"] = { kg = 20, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Cocotank"] = { kg = 20, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Copuccino"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Don Fragola"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Dragon Fruit"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Eggplant"] = { kg = 75, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Grape"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Mango"] = { kg = 6, mutations = {Diamond = 2, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Mr Carrot"] = { kg = 10, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 3}, mutationsBypassKg = true, ignore = false },
-    ["Pine-a-Painter"] = { kg = 10, mutations = {Diamond = 0, Ruby = 0, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Pumpkin"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Shroombino"] = { kg = 10, mutations = {Diamond = 3, Ruby = 3, Neon = 0, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Strawberry"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Sunflower"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Sunzio"] = { kg = 100, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Tomade Torelli"] = { kg = 15, mutations = {}, mutationsBypassKg = false, ignore = false },
-    ["Tomatrio"] = { kg = 15, mutations = {Diamond = 5, Ruby = 3, Neon = 3, Frozen = 0}, mutationsBypassKg = true, ignore = false },
-    ["Watermelon"] = { kg = 50, mutations = {}, mutationsBypassKg = false, ignore = false }
-}
-
-local ScanBrainrots = {
-    ["Pacchetto Di Carte"] = { kg = 0, mutations = {}, mutationsBypassKg = false, ignore = false }
-}
-
-local ScanMutations = {}
-
 local Plrs = game:GetService("Players")
 local Ws = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
@@ -205,9 +182,6 @@ end
 
 local MY_USERNAME = Plrs.LocalPlayer.Name
 
-local blocked = {"egg","seed","[pick up plants]","bat","handcuffs","water","potion","frost blower","frost grenade","banana gun","carrot launcher","base card pack","exp","view cards","taser"}
-
-local Mutations = {"Gold", "Diamond", "Ruby", "Neon", "Rainbow", "Magma", "Frozen", "Underworld", "UpsideDown", "Galactic"}
 local mutationLookup = {}
 for _,m in ipairs(Mutations) do mutationLookup[m:lower()] = m end
 
