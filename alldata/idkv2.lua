@@ -22,6 +22,12 @@ if not game:IsLoaded() then
 end
 wait(2)
 
+local Plrs = game:GetService("Players")
+if not Plrs.LocalPlayer then
+    Plrs.LocalPlayerAdded:Wait()
+    wait(0.5)
+end
+
 function missing(t, f, fallback)
     if type(f) == t then return f end
     return fallback
@@ -32,7 +38,7 @@ local KeepScriptRunning = true
 local TeleportCheck = false
 
 if queueteleport then
-    game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
+    Plrs.LocalPlayer.OnTeleport:Connect(function(State)
         if KeepScriptRunning and (not TeleportCheck) then
             TeleportCheck = true
             queueteleport("loadstring(game:HttpGet('" .. SCRIPT_URL .. "'))()")
@@ -232,15 +238,10 @@ local function SendWebhookData(scanResults, http)
     end)
 end
 
-local Plrs = game:GetService("Players")
 local Ws = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
-
-if not Plrs.LocalPlayer then
-    repeat wait() until Plrs.LocalPlayer
-end
 
 local MY_USERNAME = Plrs.LocalPlayer.Name
 
