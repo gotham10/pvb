@@ -1,7 +1,6 @@
 local global_container
 do
 	local finder_code, global_container_obj = (function()
-		print("Finder: Initializing")
 		local globalenv = getgenv and getgenv() or _G or shared
 		local globalcontainer = globalenv.globalcontainer
 		if not globalcontainer then
@@ -50,7 +49,6 @@ do
 					local matched
 					for methodname, pattern in next, query do
 						if pattern(name, envname) then
-							print(string.format("Finder: Found function '%s'", methodname))
 							globalcontainer[methodname] = val
 							if not matched then
 								matched = {}
@@ -108,7 +106,6 @@ do
 			antioverflow = nil
 			query = nil
 		end
-		print("Finder: Search complete.")
 		return finder, globalcontainer
 	end)()
 	global_container = global_container_obj
@@ -121,13 +118,11 @@ end
 local getscriptbytecode = global_container.getscriptbytecode
 local sha384
 if global_container.hash then
-	print("SHA384: Native hash function found.")
 	sha384 = function(data)
 		return global_container.hash(data, "sha384")
 	end
 end
 if not sha384 then
-	print("SHA384: Native hash not found, attempting online require.")
 	pcall(function()
 		local require_online = (function()
 			local RequireCache = {}
@@ -156,7 +151,6 @@ if not sha384 then
 		end
 	end)
 end
-print(string.format("SHA384: Loaded successfully: %s", tostring(sha384 ~= nil)))
 
 local decompile = decompile
 local setclipboard = setclipboard
@@ -179,16 +173,11 @@ while is_folder_func(string.format("Games/%s/V%d", game_name, version)) do
 	version = version + 1
 end
 local execution_folder = string.format("Games/%s/V%d", game_name, version)
-print("FileSystem: Game Name: " .. game_name)
-print("FileSystem: Execution Folder: " .. execution_folder)
 
 if can_write_file and can_make_folder and type(make_folder_func) == 'function' then
-    print("FileSystem: File I/O available. Creating directories.")
-    pcall(make_folder_func, "Games")
-    pcall(make_folder_func, string.format("Games/%s", game_name))
-    pcall(make_folder_func, execution_folder)
-else
-    print("FileSystem: File I/O not available.")
+	pcall(make_folder_func, "Games")
+	pcall(make_folder_func, string.format("Games/%s", game_name))
+	pcall(make_folder_func, execution_folder)
 end
 
 local StatusGui = Instance.new("ScreenGui")
@@ -201,7 +190,6 @@ local function updateStatus(text, color)
 end
 
 local function setupStatusGui()
-    print("GUI: Setting up status display.")
 	StatusGui.DisplayOrder = 2e9
 	pcall(function() StatusGui.OnTopOfCoreBlur = true end)
 	StatusText.BackgroundTransparency = 1
@@ -234,108 +222,9 @@ local function setupStatusGui()
 		StatusGui.Name = randomString()
 		StatusGui.Parent = game:GetService("CoreGui")
 	end
-    print("GUI: Status display parented.")
-end
-
-local function dumpModuleData()
-    print("ModuleDump: Starting.")
-	updateStatus("Dumping module data...", Color3.new(1, 1, 0))
-	task.wait(1)
-	local replicatedStorage = game:GetService("ReplicatedStorage")
-    local commonModules = replicatedStorage:FindFirstChild("CommonModules")
-	if not commonModules then
-        print("ModuleDump: 'CommonModules' folder not found. Skipping module data dump.")
-		updateStatus("CommonModules not found, skipping data dump.", Color3.new(1, 1, 0))
-		task.wait(2)
-		return
-	end
-    print("ModuleDump: Found CommonModules. Searching for sub-folders.")
-    local r = commonModules:FindFirstChild("DefinitionModules")
-    local cu = commonModules:FindFirstChild("CoreUtil")
-	if not (r and cu) then
-		print("ModuleDump: Required sub-folders (DefinitionModules or CoreUtil) not found. Skipping.")
-		updateStatus("Required sub-modules not found, skipping data dump.", Color3.new(1, 0.2, 0.2))
-		task.wait(2)
-		return
-	end
-	local all = {}
-	local function collect(p)
-		local t = {}
-		for _, c in ipairs(p:GetChildren()) do
-			if c:IsA("ModuleScript") then
-				table.insert(t, c)
-			elseif c:IsA("Folder") or c:IsA("Configuration") then
-				for _, m in ipairs(collect(c)) do
-					table.insert(t, m)
-				end
-			end
-		end
-		return t
-	end
-	for _, b in ipairs(r:GetChildren()) do
-		if b:IsA("ModuleScript") then
-			local d = b:FindFirstChild("DefinitionModules")
-			if d and d:IsA("Folder") then
-				local m = collect(d)
-				for _, x in ipairs(m) do
-					table.insert(all, x)
-				end
-			end
-		end
-	end
-	for _, m in ipairs(collect(cu)) do
-		table.insert(all, m)
-	end
-	local u = cu:FindFirstChild("Util")
-	if u and u:IsA("Folder") then
-		for _, m in ipairs(collect(u)) do
-			table.insert(all, m)
-		end
-	end
-    print(string.format("ModuleDump: Collected %d modules to process.", #all))
-	local function dump(t, i, v)
-		i = i or ""
-		v = v or {}
-		if v[t] then return "" end
-		v[t] = true
-		local o = {}
-		for k, x in pairs(t) do
-			local s = tostring(k)
-			if type(x) == "table" then
-				table.insert(o, i .. s .. " = {\n")
-				table.insert(o, dump(x, i .. "  ", v))
-				table.insert(o, i .. "}\n")
-			elseif type(x) ~= "function" then
-				table.insert(o, i .. s .. " = " .. tostring(x) .. "\n")
-			end
-		end
-		return table.concat(o)
-	end
-	local a = {}
-	for _, s in ipairs(all) do
-		local ok, v = pcall(require, s)
-		if ok then
-			if type(v) == "table" then
-				local d = dump(v)
-				if d ~= "" then
-					table.insert(a, "-- " .. s:GetFullName() .. "\n")
-					table.insert(a, d)
-				end
-			end
-		end
-	end
-	if can_write_file and type(writefile_func) == "function" and #a > 0 then
-        print("ModuleDump: Writing data to file.")
-		local file_name = string.format("%s/ModuleData.txt", execution_folder)
-		writefile_func(file_name, table.concat(a, "\n"))
-		updateStatus("Module data saved.", Color3.new(0.3, 1, 0.3))
-		task.wait(2)
-	end
-    print("ModuleDump: Finished.")
 end
 
 local function decompileAllScripts()
-    print("DecompileAll: Starting.")
 	local function construct_TimeoutHandler(timeout, func, timeout_return_value)
 		return function(...)
 			local args = { ... }
@@ -373,13 +262,11 @@ local function decompileAllScripts()
 		local decompileTimeout = timeout or 10
 		local getbytecode_h = construct_TimeoutHandler(3, getscriptbytecode)
 		local decompiler_h = construct_TimeoutHandler(decompileTimeout, decompile, "-- Decompiler timed out after " .. tostring(decompileTimeout) .. " seconds.")
-		print("Decompile: Getting bytecode for '" .. scriptInstance:GetFullName() .. "'")
 		local success, bytecode = getbytecode_h(scriptInstance)
 		local hashed_bytecode
 		local cached_source
 		if success and bytecode and bytecode ~= "" then
 			hashed_bytecode = sha384(bytecode)
-			print("Decompile: Bytecode hash: " .. tostring(hashed_bytecode))
 			cached_source = ldeccache[hashed_bytecode]
 		elseif success then
 			return true, "-- The script is empty."
@@ -387,12 +274,9 @@ local function decompileAllScripts()
 			return false, "-- Failed to get bytecode."
 		end
 		if cached_source then
-            print("Decompile: Found cached source for hash.")
 			return true, cached_source
 		end
-        print("Decompile: Decompiling source for '" .. scriptInstance:GetFullName() .. "'")
 		local decompile_success, decompiled_source = decompiler_h(scriptInstance)
-        print("Decompile: Decompilation success: " .. tostring(decompile_success))
 		local output
 		if decompile_success and decompiled_source then
 			output = string.gsub(decompiled_source, "\0", "\\0")
@@ -415,6 +299,7 @@ local function decompileAllScripts()
 	end
 
 	local ALL_SCRIPTS_DATA = {}
+	local SCRIPTS_TO_DECOMPILE = {}
 	local SERVICES_TO_SCAN = {
 		game:GetService("Workspace"),
 		game:GetService("Players"),
@@ -431,27 +316,19 @@ local function decompileAllScripts()
 		["CoreScripts"] = true,
 		["RobloxPluginGuiService"] = true
 	}
-	local crawlForScripts
-	crawlForScripts = function(instance)
+	local discoverScripts
+	discoverScripts = function(instance)
 		if IGNORE_LIST[instance.Name] then
 			return
 		end
 		local success, isScript = pcall(function() return instance:IsA("LuaSourceContainer") end)
 		if success and isScript then
-			local path = instance:GetFullName()
-			updateStatus("Decompiling: " .. path, Color3.new(0.9, 0.9, 0.9))
-			task.wait()
-			local source_success, source_code = getScriptSource(instance)
-			if source_success then
-				table.insert(ALL_SCRIPTS_DATA, { path = path, code = source_code })
-			else
-				table.insert(ALL_SCRIPTS_DATA, { path = path, code = "--[[ DECOMPILATION FAILED: " .. tostring(source_code) .. " ]]--" })
-			end
+			table.insert(SCRIPTS_TO_DECOMPILE, instance)
 		end
 		local success_children, children = pcall(function() return instance:GetChildren() end)
 		if success_children and children then
 			for _, child in ipairs(children) do
-				crawlForScripts(child)
+				discoverScripts(child)
 			end
 		end
 	end
@@ -463,20 +340,40 @@ local function decompileAllScripts()
 		StatusGui:Destroy()
 		return
 	end
-	updateStatus("Required functions found. Starting crawl...", Color3.new(0.5, 1, 0.5))
-	task.wait(1.5)
+	
+	updateStatus("Scanning game for scripts...", Color3.new(0.5, 1, 0.5))
+	task.wait() 
+	
 	for _, service in ipairs(SERVICES_TO_SCAN) do
-        print("DecompileAll: Scanning service: " .. service.Name)
-		crawlForScripts(service)
+		discoverScripts(service)
 	end
-	updateStatus("Crawl finished. Compiling results...", Color3.new(1, 1, 0))
-    print(string.format("DecompileAll: Crawl finished. Found %d scripts.", #ALL_SCRIPTS_DATA))
-	task.wait(1)
-	if #ALL_SCRIPTS_DATA == 0 then
+
+	local total_scripts = #SCRIPTS_TO_DECOMPILE
+	updateStatus(string.format("Found %d scripts. Starting decompile...", total_scripts), Color3.new(0.5, 1, 0.5))
+	task.wait(1.5)
+
+	if total_scripts == 0 then
 		updateStatus("No scripts were found to decompile.", Color3.new(1, 1, 0))
 		task.wait(5)
 		return
 	end
+
+	for i, scriptInstance in ipairs(SCRIPTS_TO_DECOMPILE) do
+		local path = scriptInstance:GetFullName()
+		updateStatus(string.format("Decompiling (%d/%d): %s", i, total_scripts, path), Color3.new(0.9, 0.9, 0.9))
+		task.wait()
+		
+		local source_success, source_code = getScriptSource(scriptInstance)
+		if source_success then
+			table.insert(ALL_SCRIPTS_DATA, { path = path, code = source_code })
+		else
+			table.insert(ALL_SCRIPTS_DATA, { path = path, code = "--[[ DECOMPILATION FAILED: " .. tostring(source_code) .. " ]]--" })
+		end
+	end
+	
+	updateStatus("Crawl finished. Compiling results...", Color3.new(1, 1, 0))
+	task.wait(1)
+
 	table.sort(ALL_SCRIPTS_DATA, function(a, b) return a.path < b.path end)
 	local output_parts = {}
 	for _, data in ipairs(ALL_SCRIPTS_DATA) do
@@ -484,33 +381,24 @@ local function decompileAllScripts()
 		table.insert(output_parts, formatted_entry)
 	end
 	local final_output = table.concat(output_parts, "\n\n")
+	
 	if can_write_file and type(writefile_func) == "function" then
-        print("DecompileAll: Writing all sources to file.")
 		local file_name = string.format("%s/ClientScriptDump.txt", execution_folder)
 		writefile_func(file_name, final_output)
-		updateStatus("SUCCESS: Scripts saved to file.", Color3.new(0.3, 1, 0.3))
+		updateStatus(string.format("SUCCESS: Scripts saved to %s", file_name), Color3.new(0.3, 1, 0.3))
 	elseif setclipboard then
-        print("DecompileAll: Copying all sources to clipboard.")
 		setclipboard(final_output)
 		updateStatus("SUCCESS: Scripts copied to clipboard.", Color3.new(0.3, 1, 0.3))
 	else
-        print("DecompileAll: No method available to save or copy output.")
 		updateStatus("FAILURE: Could not save or copy.", Color3.new(1, 0.2, 0.2))
 	end
-    print("DecompileAll: Finished.")
 end
 
 task.spawn(function()
-    print("Main: Task spawned.")
 	setupStatusGui()
-    print("Main: Executing module data dump.")
-	pcall(dumpModuleData)
-    print("Main: Module data dump finished.")
-	print("Main: Executing script decompiler.")
-    pcall(decompileAllScripts)
-    print("Main: Script decompiler finished.")
-	updateStatus("All tasks finished.", Color3.new(0.2, 1, 0.2))
-    print("Main: All tasks complete.")
+	pcall(decompileAllScripts)
 	task.wait(10)
-	StatusGui:Destroy()
+	if StatusGui and StatusGui.Parent then
+		StatusGui:Destroy()
+	end
 end)
