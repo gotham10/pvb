@@ -214,4 +214,3 @@ end
 coroutine.wrap(runLogger)()
 task.spawn(sendAttributeData)
 task.spawn(checkAndUpdateVersion)
-
