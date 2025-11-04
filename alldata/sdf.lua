@@ -71,6 +71,10 @@ local function sendLogData()
 	local plantItems = getStockFromFrame(seedsScrolling)
 	local gearItems = getStockFromFrame(gearsScrolling)
 
+	if not next(plantItems) and not next(gearItems) then
+		return
+	end
+
 	local newLogEntry = {
 		timestamp = os.date("%Y-%m-%d %I:%M:%S %p"),
 		plants = plantItems,
@@ -123,7 +127,7 @@ local function runLogger()
 		gearsScrolling = gearsGui.Frame:WaitForChild("ScrollingFrame")
 	end
 
-	task.wait(1)
+	task.wait(5)
 	sendLogData()
 end
 
@@ -198,7 +202,7 @@ local function checkAndUpdateVersion()
 		
 		if encodeSuccess then
 			pcall(request, {
-				Url = VERSION_CHECK_WEL,
+				Url = VERSION_CHECK_URL,
 				Method = "PUT",
 				Headers = {["Content-Type"] = "application/json"},
 				Body = encodedPayload
