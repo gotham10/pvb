@@ -98,6 +98,20 @@ local function sendLogData()
 	end)
 end
 
+local function connectStockLabelListener(itemFrame)
+	if isIgnored(itemFrame) then
+		return
+	end
+	
+	local stockLabel = findStockLabel(itemFrame)
+	if stockLabel then
+		stockLabel:GetPropertyChangedSignal("Text"):Connect(function()
+			task.wait(0.1)
+			sendLogData()
+		end)
+	end
+end
+
 local function runLogger()
 	local seedsGui = mainGui:WaitForChild("Seeds")
 	local gearsGui = mainGui:WaitForChild("Gears")
@@ -121,10 +135,22 @@ local function runLogger()
 				lastSeconds = s
 			end)
 		end
+		
+		for _, itemFrame in ipairs(seedsScrolling:GetChildren()) do
+			connectStockLabelListener(itemFrame)
+		end
+		
+		seedsScrolling.ChildAdded:Connect(connectStockLabelListener)
 	end
 
 	if gearsGui then
 		gearsScrolling = gearsGui.Frame:WaitForChild("ScrollingFrame")
+		
+		for _, itemFrame in ipairs(gearsScrolling:GetChildren()) do
+			connectStockLabelListener(itemFrame)
+		end
+		
+		gearsScrolling.ChildAdded:Connect(connectStockLabelListener)
 	end
 
 	task.wait(5)
@@ -214,3 +240,4 @@ end
 coroutine.wrap(runLogger)()
 task.spawn(sendAttributeData)
 task.spawn(checkAndUpdateVersion)
+
