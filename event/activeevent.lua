@@ -1,4 +1,7 @@
+local wl = {"User1","User2","User3"}
 local p = game.Players.LocalPlayer
+if not table.find(wl,p.Name) then return end
+
 local b = p.PlayerGui.Main.AutoSell.Frame.Limited.TextButton
 local rem = game.ReplicatedStorage.Remotes.AutoSell
 local ws = game.Workspace
@@ -18,7 +21,6 @@ local function updateAutoSell()
 	local g = getGradients()
 	local s = g.selected and g.selected.Enabled
 	local u = g.unselected and g.unselected.Enabled
-
 	if not string.find(e, "HalloweenEvent") then
 		if s then
 			print("No HalloweenEvent, AutoSell ON → turning OFF")
