@@ -23,12 +23,10 @@ local function updateAutoSell()
 	local u = g.unselected and g.unselected.Enabled
 	if not string.find(e, "HalloweenEvent") then
 		if s then
-			print("No HalloweenEvent, AutoSell ON → turning OFF")
 			rem:FireServer("Limited")
 		end
 	else
 		if u then
-			print("HalloweenEvent active, AutoSell OFF → turning ON")
 			rem:FireServer("Limited")
 		end
 	end
