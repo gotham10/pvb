@@ -1,1 +1,1 @@
-game:GetService("ReplicatedStorage").Remotes:WaitForChild("SelectiveAssetService"):WaitForChild("RequestAsset"):FireServer("Brainrots", "Cassa Trotto")
+game:GetService("ReplicatedStorage").Remotes:WaitForChild("SelectiveAssetService"):WaitForChild("RequestAsset"):FireServer("Brainrots", "")
